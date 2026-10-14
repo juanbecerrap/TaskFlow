@@ -1,0 +1,192 @@
+/* Salto de contenido para usuarios de teclado */
+.tf-skip-link {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 2000;
+  padding: 0.5rem 1rem;
+  color: var(--tf-primary);
+  background-color: var(--tf-surface);
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.tf-skip-link:focus {
+  left: 0;
+}
+
+/* Marca */
+.tf-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Botón de icono sobre fondo oscuro */
+.tf-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #ffffff;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0.5rem;
+  transition: background-color var(--tf-transition);
+}
+
+.tf-icon-btn:hover {
+  background-color: rgb(255 255 255 / 12%);
+}
+
+/* En fondos oscuros el foco se dibuja en blanco para mantener el contraste */
+.tf-topbar :focus-visible,
+.tf-sidebar :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Barra superior (solo móvil y tableta) */
+.tf-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--tf-sidebar);
+}
+
+.tf-topbar.d-lg-none {
+  display: flex;
+}
+
+/* Barra lateral */
+.tf-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1045;
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  overflow-y: auto;
+  color: #ffffff;
+  visibility: hidden;
+  background-color: var(--tf-sidebar);
+  transform: translateX(-100%);
+  transition:
+    transform var(--tf-transition),
+    visibility var(--tf-transition);
+}
+
+.tf-sidebar--abierta {
+  visibility: visible;
+  transform: none;
+}
+
+.tf-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1rem;
+}
+
+.tf-sidebar__nav {
+  padding: 0.5rem 0.75rem 1.5rem;
+}
+
+.tf-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.25rem;
+  color: rgb(255 255 255 / 78%);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  border-radius: 0.5rem;
+  transition:
+    background-color var(--tf-transition),
+    color var(--tf-transition);
+}
+
+.tf-nav-link:hover {
+  color: #ffffff;
+  background-color: rgb(255 255 255 / 8%);
+}
+
+/* La página activa se marca con fondo, barra lateral y peso, no solo con color */
+.tf-nav-link.active {
+  font-weight: 600;
+  color: #ffffff;
+  background-color: rgb(255 255 255 / 14%);
+  border-left-color: #ffffff;
+}
+
+.tf-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  background-color: rgb(15 23 42 / 55%);
+}
+
+/* Contenido principal */
+.tf-main {
+  min-height: 100vh;
+}
+
+.tf-main__inner {
+  max-width: 1200px;
+  padding: 1.5rem 1rem;
+  margin: 0 auto;
+}
+
+.tf-main__inner:focus {
+  outline: none;
+}
+
+/* Escritorio: la barra lateral siempre visible */
+@media (min-width: 992px) {
+  .tf-sidebar {
+    visibility: visible;
+    transform: none;
+  }
+
+  .tf-main {
+    margin-left: 260px;
+  }
+
+  .tf-main__inner {
+    padding: 2rem;
+  }
+}
+
+/* Páginas de autenticación */
+.tf-auth {
+  display: grid;
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  place-items: center;
+}
+
+.tf-auth__main {
+  width: 100%;
+  max-width: 440px;
+}
+
+.tf-auth__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.tf-auth__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+}
