@@ -1,0 +1,85 @@
+:root {
+  /* Paleta de TaskFlow */
+  --tf-bg: #f8fafc;
+  --tf-sidebar: #0b1437;
+  --tf-primary: #4f46e5;
+  --tf-primary-hover: #4338ca;
+  --tf-primary-active: #3730a3;
+  --tf-surface: #ffffff;
+  --tf-border: #e2e8f0;
+  --tf-text: #0f172a;
+  --tf-text-muted: #475569;
+  --tf-shadow: 0 1px 2px rgb(15 23 42 / 6%), 0 4px 12px rgb(15 23 42 / 6%);
+  --tf-radius: 0.75rem;
+  --tf-transition: 150ms ease;
+
+  /* Ajustes sobre las variables de Bootstrap */
+  --bs-body-bg: var(--tf-bg);
+  --bs-body-color: var(--tf-text);
+  --bs-secondary-color: var(--tf-text-muted);
+  --bs-border-color: var(--tf-border);
+  --bs-primary: var(--tf-primary);
+  --bs-primary-rgb: 79, 70, 229;
+  --bs-link-color: var(--tf-primary);
+  --bs-link-hover-color: var(--tf-primary-hover);
+}
+
+body {
+  background-color: var(--tf-bg);
+  color: var(--tf-text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Botón primario con la paleta de TaskFlow */
+.btn-primary {
+  --bs-btn-bg: var(--tf-primary);
+  --bs-btn-border-color: var(--tf-primary);
+  --bs-btn-hover-bg: var(--tf-primary-hover);
+  --bs-btn-hover-border-color: var(--tf-primary-hover);
+  --bs-btn-active-bg: var(--tf-primary-active);
+  --bs-btn-active-border-color: var(--tf-primary-active);
+  --bs-btn-disabled-bg: var(--tf-primary);
+  --bs-btn-disabled-border-color: var(--tf-primary);
+}
+
+/* Indicador de foco visible para teclado */
+:focus-visible {
+  outline: 3px solid var(--tf-primary);
+  outline-offset: 2px;
+}
+
+/* Tarjeta base reutilizable */
+.tf-card {
+  background-color: var(--tf-surface);
+  border: 1px solid var(--tf-border);
+  border-radius: var(--tf-radius);
+  box-shadow: var(--tf-shadow);
+}
+
+/* Pantalla provisional de la fase de configuración */
+.tf-placeholder {
+  max-width: 520px;
+}
+
+.tf-placeholder__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  color: #ffffff;
+  background-color: var(--tf-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
