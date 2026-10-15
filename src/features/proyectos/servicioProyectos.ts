@@ -109,3 +109,17 @@ export function suscribirProyectos(
     alFallar,
   )
 }
+
+export function suscribirProyecto(
+  db: Firestore,
+  id: string,
+  alRecibir: (proyecto: Proyecto | null) => void,
+  alFallar: (error: Error) => void,
+): Unsubscribe {
+  return onSnapshot(
+    doc(db, 'projects', id),
+    (instantanea) =>
+      alRecibir(instantanea.exists() ? aProyecto(instantanea) : null),
+    alFallar,
+  )
+}

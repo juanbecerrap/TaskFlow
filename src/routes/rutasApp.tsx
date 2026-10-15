@@ -6,6 +6,8 @@ import { PaginaIniciarSesion } from '../pages/auth/PaginaIniciarSesion'
 import { PaginaRecuperarContrasena } from '../pages/auth/PaginaRecuperarContrasena'
 import { PaginaRegistro } from '../pages/auth/PaginaRegistro'
 import { PaginaDetalleProyecto } from '../pages/PaginaDetalleProyecto'
+import { PaginaEditarProyecto } from '../pages/PaginaEditarProyecto'
+import { PaginaNuevoProyecto } from '../pages/PaginaNuevoProyecto'
 import { PaginaPanel } from '../pages/PaginaPanel'
 import { PaginaPerfil } from '../pages/PaginaPerfil'
 import { PaginaProyectos } from '../pages/PaginaProyectos'
@@ -44,7 +46,9 @@ export const rutasApp: RouteObject[] = [
         children: [
           { path: RUTAS.panel, element: <PaginaPanel /> },
           { path: RUTAS.proyectos, element: <PaginaProyectos /> },
+          { path: RUTAS.nuevoProyecto, element: <PaginaNuevoProyecto /> },
           { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
+          { path: RUTAS.editarProyectoPatron, element: <PaginaEditarProyecto /> },
           { path: RUTAS.tareas, element: <PaginaTareas /> },
           { path: RUTAS.tablero, element: <PaginaTablero /> },
           { path: RUTAS.perfil, element: <PaginaPerfil /> },

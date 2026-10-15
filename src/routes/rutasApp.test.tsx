@@ -16,6 +16,15 @@ const servicio = vi.hoisted(() => ({
 }))
 
 vi.mock('../features/auth/servicioAuth', () => servicio)
+vi.mock('../features/proyectos/servicioProyectos', () => ({
+  suscribirProyectos: vi.fn(() => vi.fn()),
+  suscribirProyecto: vi.fn(() => vi.fn()),
+  crearProyecto: vi.fn(),
+  actualizarProyecto: vi.fn(),
+  cambiarEstadoProyecto: vi.fn(),
+  eliminarProyecto: vi.fn(),
+  aProyecto: vi.fn(),
+}))
 
 const USUARIO = {
   uid: 'u1',
