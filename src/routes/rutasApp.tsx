@@ -2,7 +2,15 @@ import { Navigate, type RouteObject } from 'react-router'
 import { AppShell } from '../components/layout/AppShell'
 import { AuthLayout } from '../components/layout/AuthLayout'
 import { PaginaNoEncontrada } from '../components/common/PaginaNoEncontrada'
-import { PaginaProvisional } from '../components/common/PaginaProvisional'
+import { PaginaIniciarSesion } from '../pages/auth/PaginaIniciarSesion'
+import { PaginaRecuperarContrasena } from '../pages/auth/PaginaRecuperarContrasena'
+import { PaginaRegistro } from '../pages/auth/PaginaRegistro'
+import { PaginaDetalleProyecto } from '../pages/PaginaDetalleProyecto'
+import { PaginaPanel } from '../pages/PaginaPanel'
+import { PaginaPerfil } from '../pages/PaginaPerfil'
+import { PaginaProyectos } from '../pages/PaginaProyectos'
+import { PaginaTablero } from '../pages/PaginaTablero'
+import { PaginaTareas } from '../pages/PaginaTareas'
 import { RUTAS } from './rutas'
 
 export const rutasApp: RouteObject[] = [
@@ -13,35 +21,20 @@ export const rutasApp: RouteObject[] = [
   {
     element: <AuthLayout />,
     children: [
-      {
-        path: RUTAS.iniciarSesion,
-        element: <PaginaProvisional titulo="Iniciar sesión" />,
-      },
-      {
-        path: RUTAS.registro,
-        element: <PaginaProvisional titulo="Crear cuenta" />,
-      },
-      {
-        path: RUTAS.recuperarContrasena,
-        element: <PaginaProvisional titulo="Recuperar contraseña" />,
-      },
+      { path: RUTAS.iniciarSesion, element: <PaginaIniciarSesion /> },
+      { path: RUTAS.registro, element: <PaginaRegistro /> },
+      { path: RUTAS.recuperarContrasena, element: <PaginaRecuperarContrasena /> },
     ],
   },
   {
     element: <AppShell />,
     children: [
-      { path: RUTAS.panel, element: <PaginaProvisional titulo="Panel" /> },
-      {
-        path: RUTAS.proyectos,
-        element: <PaginaProvisional titulo="Proyectos" />,
-      },
-      {
-        path: RUTAS.proyectoPatron,
-        element: <PaginaProvisional titulo="Detalle de proyecto" />,
-      },
-      { path: RUTAS.tareas, element: <PaginaProvisional titulo="Tareas" /> },
-      { path: RUTAS.tablero, element: <PaginaProvisional titulo="Tablero" /> },
-      { path: RUTAS.perfil, element: <PaginaProvisional titulo="Perfil" /> },
+      { path: RUTAS.panel, element: <PaginaPanel /> },
+      { path: RUTAS.proyectos, element: <PaginaProyectos /> },
+      { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
+      { path: RUTAS.tareas, element: <PaginaTareas /> },
+      { path: RUTAS.tablero, element: <PaginaTablero /> },
+      { path: RUTAS.perfil, element: <PaginaPerfil /> },
     ],
   },
   { path: '*', element: <PaginaNoEncontrada /> },
