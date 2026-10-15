@@ -190,3 +190,42 @@
   width: 2.5rem;
   height: 2.5rem;
 }
+
+/* Pie de la barra lateral: cuenta y cierre de sesión */
+.tf-sidebar__footer {
+  padding: 0.75rem;
+  margin-top: auto;
+  border-top: 1px solid rgb(255 255 255 / 14%);
+}
+
+.tf-sidebar__user {
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  font-size: 0.875rem;
+  color: rgb(255 255 255 / 78%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tf-nav-link--boton {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background-color: transparent;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.tf-nav-link--boton:hover {
+  background-color: rgb(255 255 255 / 8%);
+}
+
+.tf-sidebar__error {
+  padding: 0 0.75rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: #ffffff;
+}

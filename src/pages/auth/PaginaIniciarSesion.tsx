@@ -4,25 +4,36 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { CampoContrasena } from '../../components/common/CampoContrasena'
 import { CampoTexto } from '../../components/common/CampoTexto'
-import { esquemaInicioSesion, type DatosInicioSesion } from '../../features/auth/esquemas'
+import { MensajeError } from '../../components/common/MensajeError'
+import { mensajeErrorAuth } from '../../features/auth/errores'
+import {
+  esquemaInicioSesion,
+  type DatosInicioSesion,
+} from '../../features/auth/esquemas'
+import { iniciarSesion } from '../../features/auth/servicioAuth'
 import { useTituloDocumento } from '../../hooks/useTituloDocumento'
 import { RUTAS } from '../../routes/rutas'
 
 export function PaginaIniciarSesion() {
   useTituloDocumento('Iniciar sesión')
-  const [aviso, setAviso] = useState('')
+  const [errorEnvio, setErrorEnvio] = useState('')
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<DatosInicioSesion>({
     resolver: zodResolver(esquemaInicioSesion),
     defaultValues: { correo: '', contrasena: '' },
   })
 
-  // Temporal: en la Fase 5 aquí se llama a Firebase Auth.
-  function alEnviar() {
-    setAviso('Datos válidos. El inicio de sesión real se conecta en la Fase 5.')
+  // Si el acceso funciona, RutaSoloPublica redirige sola al panel.
+  async function alEnviar(datos: DatosInicioSesion) {
+    setErrorEnvio('')
+    try {
+      await iniciarSesion(datos)
+    } catch (error) {
+      setErrorEnvio(mensajeErrorAuth(error))
+    }
   }
 
   return (
@@ -30,7 +41,7 @@ export function PaginaIniciarSesion() {
       <h1 className="h3 mb-1">Iniciar sesión</h1>
       <p className="text-body-secondary mb-4">Accede a tus proyectos y tareas.</p>
 
-      <form noValidate onSubmit={handleSubmit(alEnviar)}>
+      <form noValidate onSubmit={handleSubmit(alEnviar)} aria-busy={isSubmitting}>
         <CampoTexto
           etiqueta="Correo electrónico"
           type="email"
@@ -44,14 +55,16 @@ export function PaginaIniciarSesion() {
           error={errors.contrasena?.message}
           {...register('contrasena')}
         />
-        <button type="submit" className="btn btn-primary w-100">
-          Iniciar sesión
+        <button type="submit" className="btn btn-primary w-100" disabled={isSubmitting}>
+          {isSubmitting ? 'Iniciando sesión…' : 'Iniciar sesión'}
         </button>
       </form>
 
-      <div role="status">
-        {aviso && <div className="alert alert-info mt-3 mb-0">{aviso}</div>}
-      </div>
+      {errorEnvio && (
+        <div className="mt-3">
+          <MensajeError mensaje={errorEnvio} />
+        </div>
+      )}
 
       <p className="mt-4 mb-1 text-center">
         <Link to={RUTAS.recuperarContrasena}>¿Olvidaste tu contraseña?</Link>

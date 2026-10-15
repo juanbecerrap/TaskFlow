@@ -3,10 +3,19 @@ import userEvent from '@testing-library/user-event'
 import type { User } from 'firebase/auth'
 import { createMemoryRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { ContextoAuth, type EstadoAuth } from '../features/auth/contextoAuth'
 import { RUTAS } from './rutas'
 import { rutasApp } from './rutasApp'
+
+const servicio = vi.hoisted(() => ({
+  iniciarSesion: vi.fn(),
+  registrarUsuario: vi.fn(),
+  enviarCorreoRecuperacion: vi.fn(),
+  cerrarSesion: vi.fn(),
+}))
+
+vi.mock('../features/auth/servicioAuth', () => servicio)
 
 const USUARIO = {
   uid: 'u1',
@@ -127,5 +136,15 @@ describe('rutas de la aplicación', () => {
       'Comprobando sesión…',
     )
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument()
+  })
+
+  it('muestra el correo de la cuenta y permite cerrar sesión', async () => {
+    const usuario = userEvent.setup()
+    renderizarEn(RUTAS.panel)
+
+    expect(await screen.findByText('ana@correo.com')).toBeInTheDocument()
+
+    await usuario.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    expect(servicio.cerrarSesion).toHaveBeenCalledTimes(1)
   })
 })

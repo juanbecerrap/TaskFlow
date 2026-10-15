@@ -4,25 +4,33 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { CampoContrasena } from '../../components/common/CampoContrasena'
 import { CampoTexto } from '../../components/common/CampoTexto'
+import { MensajeError } from '../../components/common/MensajeError'
+import { mensajeErrorAuth } from '../../features/auth/errores'
 import { esquemaRegistro, type DatosRegistro } from '../../features/auth/esquemas'
+import { registrarUsuario } from '../../features/auth/servicioAuth'
 import { useTituloDocumento } from '../../hooks/useTituloDocumento'
 import { RUTAS } from '../../routes/rutas'
 
 export function PaginaRegistro() {
   useTituloDocumento('Crear cuenta')
-  const [aviso, setAviso] = useState('')
+  const [errorEnvio, setErrorEnvio] = useState('')
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<DatosRegistro>({
     resolver: zodResolver(esquemaRegistro),
     defaultValues: { nombre: '', correo: '', contrasena: '', confirmacion: '' },
   })
 
-  // Temporal: en la Fase 5 aquí se crea la cuenta en Firebase Auth.
-  function alEnviar() {
-    setAviso('Datos válidos. El registro real se conecta en la Fase 5.')
+  // Si el registro funciona, RutaSoloPublica redirige sola al panel.
+  async function alEnviar(datos: DatosRegistro) {
+    setErrorEnvio('')
+    try {
+      await registrarUsuario(datos)
+    } catch (error) {
+      setErrorEnvio(mensajeErrorAuth(error))
+    }
   }
 
   return (
@@ -32,7 +40,7 @@ export function PaginaRegistro() {
         Empieza a organizar tus proyectos en minutos.
       </p>
 
-      <form noValidate onSubmit={handleSubmit(alEnviar)}>
+      <form noValidate onSubmit={handleSubmit(alEnviar)} aria-busy={isSubmitting}>
         <CampoTexto
           etiqueta="Nombre"
           autoComplete="name"
@@ -59,14 +67,16 @@ export function PaginaRegistro() {
           error={errors.confirmacion?.message}
           {...register('confirmacion')}
         />
-        <button type="submit" className="btn btn-primary w-100">
-          Crear cuenta
+        <button type="submit" className="btn btn-primary w-100" disabled={isSubmitting}>
+          {isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
         </button>
       </form>
 
-      <div role="status">
-        {aviso && <div className="alert alert-info mt-3 mb-0">{aviso}</div>}
-      </div>
+      {errorEnvio && (
+        <div className="mt-3">
+          <MensajeError mensaje={errorEnvio} />
+        </div>
+      )}
 
       <p className="mt-4 mb-0 text-center">
         ¿Ya tienes cuenta? <Link to={RUTAS.iniciarSesion}>Inicia sesión</Link>
