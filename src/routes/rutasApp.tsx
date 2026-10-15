@@ -12,6 +12,8 @@ import { PaginaProyectos } from '../pages/PaginaProyectos'
 import { PaginaTablero } from '../pages/PaginaTablero'
 import { PaginaTareas } from '../pages/PaginaTareas'
 import { RUTAS } from './rutas'
+import { RutaProtegida } from './RutaProtegida'
+import { RutaSoloPublica } from './RutaSoloPublica'
 
 export const rutasApp: RouteObject[] = [
   {
@@ -19,22 +21,35 @@ export const rutasApp: RouteObject[] = [
     element: <Navigate to={RUTAS.panel} replace />,
   },
   {
-    element: <AuthLayout />,
+    element: <RutaSoloPublica />,
     children: [
-      { path: RUTAS.iniciarSesion, element: <PaginaIniciarSesion /> },
-      { path: RUTAS.registro, element: <PaginaRegistro /> },
-      { path: RUTAS.recuperarContrasena, element: <PaginaRecuperarContrasena /> },
+      {
+        element: <AuthLayout />,
+        children: [
+          { path: RUTAS.iniciarSesion, element: <PaginaIniciarSesion /> },
+          { path: RUTAS.registro, element: <PaginaRegistro /> },
+          {
+            path: RUTAS.recuperarContrasena,
+            element: <PaginaRecuperarContrasena />,
+          },
+        ],
+      },
     ],
   },
   {
-    element: <AppShell />,
+    element: <RutaProtegida />,
     children: [
-      { path: RUTAS.panel, element: <PaginaPanel /> },
-      { path: RUTAS.proyectos, element: <PaginaProyectos /> },
-      { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
-      { path: RUTAS.tareas, element: <PaginaTareas /> },
-      { path: RUTAS.tablero, element: <PaginaTablero /> },
-      { path: RUTAS.perfil, element: <PaginaPerfil /> },
+      {
+        element: <AppShell />,
+        children: [
+          { path: RUTAS.panel, element: <PaginaPanel /> },
+          { path: RUTAS.proyectos, element: <PaginaProyectos /> },
+          { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
+          { path: RUTAS.tareas, element: <PaginaTareas /> },
+          { path: RUTAS.tablero, element: <PaginaTablero /> },
+          { path: RUTAS.perfil, element: <PaginaPerfil /> },
+        ],
+      },
     ],
   },
   { path: '*', element: <PaginaNoEncontrada /> },
