@@ -34,3 +34,5 @@ emulator-data/
 
 # Pruebas
 coverage
+
+*-debug.log

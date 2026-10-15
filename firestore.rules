@@ -1,0 +1,91 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function esDuenio(datos) {
+      return autenticado() && datos.ownerId == request.auth.uid;
+    }
+
+    function texto(valor, minimo, maximo) {
+      return valor is string && valor.size() >= minimo && valor.size() <= maximo;
+    }
+
+    function proyectoDelUsuario(idProyecto) {
+      return get(/databases/$(database)/documents/projects/$(idProyecto)).data.ownerId == request.auth.uid;
+    }
+
+    function perfilValido(d) {
+      return d.keys().hasOnly(['nombre', 'correo', 'creadoEn'])
+        && d.keys().hasAll(['nombre', 'correo', 'creadoEn'])
+        && texto(d.nombre, 2, 60)
+        && texto(d.correo, 3, 254);
+    }
+
+    function proyectoValido(d) {
+      return d.keys().hasOnly(['ownerId', 'nombre', 'descripcion', 'estado', 'creadoEn', 'actualizadoEn'])
+        && d.keys().hasAll(['ownerId', 'nombre', 'descripcion', 'estado', 'creadoEn', 'actualizadoEn'])
+        && d.ownerId is string
+        && texto(d.nombre, 1, 80)
+        && texto(d.descripcion, 0, 500)
+        && d.estado in ['activo', 'archivado']
+        && d.actualizadoEn == request.time;
+    }
+
+    function tareaValida(d) {
+      return d.keys().hasOnly(['ownerId', 'projectId', 'titulo', 'descripcion', 'estado', 'prioridad', 'fechaLimite', 'creadoEn', 'actualizadoEn'])
+        && d.keys().hasAll(['ownerId', 'projectId', 'titulo', 'descripcion', 'estado', 'prioridad', 'fechaLimite', 'creadoEn', 'actualizadoEn'])
+        && d.ownerId is string
+        && d.projectId is string
+        && texto(d.titulo, 1, 120)
+        && texto(d.descripcion, 0, 1000)
+        && d.estado in ['pendiente', 'en_progreso', 'completada']
+        && d.prioridad in ['baja', 'media', 'alta']
+        && (d.fechaLimite == null || d.fechaLimite is timestamp)
+        && d.actualizadoEn == request.time;
+    }
+
+    match /users/{userId} {
+      allow read: if autenticado() && request.auth.uid == userId;
+      allow create: if autenticado() && request.auth.uid == userId
+        && perfilValido(request.resource.data)
+        && request.resource.data.creadoEn == request.time;
+      allow update: if autenticado() && request.auth.uid == userId
+        && perfilValido(request.resource.data)
+        && request.resource.data.creadoEn == resource.data.creadoEn;
+      allow delete: if false;
+    }
+
+    match /projects/{projectId} {
+      allow read: if esDuenio(resource.data);
+      allow create: if autenticado()
+        && request.resource.data.ownerId == request.auth.uid
+        && proyectoValido(request.resource.data)
+        && request.resource.data.creadoEn == request.time;
+      allow update: if esDuenio(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.creadoEn == resource.data.creadoEn
+        && proyectoValido(request.resource.data);
+      allow delete: if esDuenio(resource.data);
+    }
+
+    match /tasks/{taskId} {
+      allow read: if esDuenio(resource.data);
+      allow create: if autenticado()
+        && request.resource.data.ownerId == request.auth.uid
+        && tareaValida(request.resource.data)
+        && request.resource.data.creadoEn == request.time
+        && proyectoDelUsuario(request.resource.data.projectId);
+      allow update: if esDuenio(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.projectId == resource.data.projectId
+        && request.resource.data.creadoEn == resource.data.creadoEn
+        && tareaValida(request.resource.data);
+      allow delete: if esDuenio(resource.data);
+    }
+  }
+}
