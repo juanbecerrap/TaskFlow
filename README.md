@@ -2,7 +2,7 @@
 
 Aplicación web para gestionar proyectos y tareas, con panel de estadísticas y tablero Kanban. Cada usuario ve únicamente sus propios datos.
 
-> Proyecto de portafolio. Demo: **https://taskflow-juan.web.app** · Repositorio: **[pendiente de enlazar]**
+> Proyecto de portafolio. Demo: **https://taskflow-juan.web.app** · Repositorio: **https://github.com/juanbecerrap/TaskFlow**
 
 ## Capturas
 
