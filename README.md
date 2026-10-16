@@ -2,7 +2,7 @@
 
 Aplicación web para gestionar proyectos y tareas, con panel de estadísticas y tablero Kanban. Cada usuario ve únicamente sus propios datos.
 
-> Proyecto de portafolio. Demo: **[pendiente de publicar]** · Repositorio: **[pendiente de enlazar]**
+> Proyecto de portafolio. Demo: **https://taskflow-juan.web.app** · Repositorio: **[pendiente de enlazar]**
 
 ## Capturas
 
@@ -84,7 +84,7 @@ firestore.rules, firestore.indexes.json, firebase.json
 ## Limitaciones conocidas
 
 - **`npm audit` informa 5 vulnerabilidades altas, todas de una sola cadena** (`@grpc/grpc-js` 1.9.16, traído por `firebase`). Afectan al código de *servidor* gRPC; la app web no lo usa y no está en el paquete del navegador (comprobado buscando `@grpc` en `dist`). Solo se ejecuta en Node durante las pruebas de reglas. La corrección automática propone `firebase@9.14.0`, que rompe la aplicación, así que no se aplica. Se resolverá al actualizar Firebase.
-- Las cabeceras de seguridad de Hosting (nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy y caché) están configuradas en `firebase.json`, pero **no se pudieron verificar con el emulador local**; falta comprobarlas tras el despliegue.
+- Las cabeceras de seguridad de Hosting (nosniff, X-Frame-Options, Referrer-Policy y Permissions-Policy) y la política de caché (sin caché para las páginas, un año para los archivos con hash de `assets/`) están verificadas en la URL publicada.
 - No hay Content-Security-Policy; es una mejora pendiente.
 - Si al registrarse falla la escritura del perfil en Firestore, la cuenta ya existe en Authentication.
 - Se carga Bootstrap completo; podría reducirse el CSS con una compilación a medida.
@@ -92,7 +92,9 @@ firestore.rules, firestore.indexes.json, firebase.json
 
 ## Despliegue
 
-Con Firebase Hosting (plan Spark, sin facturación):
+Publicado en Firebase Hosting (plan Spark, sin facturación): https://taskflow-juan.web.app
+
+Para volver a publicar:
 
 ```
 npm run build
