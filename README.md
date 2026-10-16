@@ -6,7 +6,17 @@ Aplicación web para gestionar proyectos y tareas, con panel de estadísticas y 
 
 ## Capturas
 
-**[Pendiente: agregar capturas del panel, la lista de tareas y el tablero]**
+### Panel
+![Panel con estadísticas, progreso y próximas tareas](docs/capturas/panel.png)
+
+### Tareas
+![Lista de tareas con filtros por estado y prioridad](docs/capturas/tareas.png)
+
+### Tablero
+![Tablero Kanban con las tareas por estado](docs/capturas/tablero.png)
+
+### Vista móvil
+<img src="docs/capturas/movil.png" alt="Panel en pantalla de teléfono" width="320">
 
 ## Funcionalidades
 
