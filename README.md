@@ -1,75 +1,102 @@
-# React + TypeScript + Vite
+# TaskFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para gestionar proyectos y tareas, con panel de estadísticas y tablero Kanban. Cada usuario ve únicamente sus propios datos.
 
-Currently, two official plugins are available:
+> Proyecto de portafolio. Demo: **[pendiente de publicar]** · Repositorio: **[pendiente de enlazar]**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Capturas
 
-## React Compiler
+**[Pendiente: agregar capturas del panel, la lista de tareas y el tablero]**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Funcionalidades
 
-## Expanding the ESLint configuration
+- Registro, inicio de sesión y recuperación de contraseña con correo y contraseña.
+- Proyectos: crear, editar, archivar, buscar y eliminar con confirmación.
+- Tareas: título, descripción, estado, prioridad y fecha límite; filtros, búsqueda y orden.
+- Panel con datos reales: proyectos activos, tareas pendientes, completadas y vencidas, progreso general, próximas tareas y proyectos recientes.
+- Tablero Kanban de tres columnas: se puede arrastrar o cambiar el estado con un selector accesible (con anuncio para lectores de pantalla).
+- Carga de páginas bajo demanda y separación de librerías grandes.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tecnologías
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+React 19 · TypeScript (modo estricto) · Vite · React Router · Bootstrap 5 · React Hook Form + Zod · Firebase (Authentication, Firestore, Hosting) · Vitest + Testing Library.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Requisitos
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 24 o superior y npm.
+- Para las pruebas de reglas: Java 21 y Firebase CLI.
+
+## Puesta en marcha
 
 ```
+npm install
+copy .env.example .env
+```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Completa en `.env` los valores de tu proyecto de Firebase (consola de Firebase → Configuración del proyecto → Tus apps). **`.env` nunca se sube al repositorio.**
 
 ```
+npm run dev
+```
+
+## Scripts
+
+| Comando | Qué hace |
+| --- | --- |
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Comprueba tipos y genera `dist` |
+| `npm run preview` | Sirve el build localmente |
+| `npm run lint` | Revisa el código con ESLint |
+| `npm test` | Pruebas de componentes, hooks y lógica (172) |
+| `npm run test:reglas` | Pruebas de reglas de Firestore en el emulador (49) |
+
+## Emuladores de Firebase
+
+Para desarrollar sin tocar datos reales:
+
+```
+firebase emulators:start --only auth,firestore --project taskflow-juan
+```
+
+y en `.env` pon `VITE_USE_FIREBASE_EMULATORS=true` (reinicia `npm run dev` para que lo lea). Vuelve a `false` al terminar. Cierra el emulador con Ctrl+C antes de `npm run test:reglas`, porque ambos usan el puerto 8080.
+
+## Estructura
+
+```
+src/
+  components/   Componentes reutilizables y de layout
+  features/     Lógica por dominio: auth, proyectos, tareas, panel
+  hooks/        Hooks compartidos
+  lib/          Firebase, formato de fechas y texto
+  pages/        Páginas de la aplicación
+  routes/       Rutas, protección y carga diferida
+  types/        Modelos de datos
+tests/reglas/   Pruebas de reglas de seguridad de Firestore
+firestore.rules, firestore.indexes.json, firebase.json
+```
+
+## Seguridad
+
+- Las reglas de Firestore exigen sesión, limitan cada documento a su dueño (`ownerId`, inmutable), validan campos, tipos y longitudes, y fijan las marcas de tiempo en el servidor. Una tarea solo se crea dentro de un proyecto propio. Todo lo demás está denegado.
+- Las 49 pruebas de reglas se ejecutan contra el emulador.
+- No hay claves ni credenciales en el código ni en el historial de Git.
+
+## Limitaciones conocidas
+
+- **`npm audit` informa 5 vulnerabilidades altas, todas de una sola cadena** (`@grpc/grpc-js` 1.9.16, traído por `firebase`). Afectan al código de *servidor* gRPC; la app web no lo usa y no está en el paquete del navegador (comprobado buscando `@grpc` en `dist`). Solo se ejecuta en Node durante las pruebas de reglas. La corrección automática propone `firebase@9.14.0`, que rompe la aplicación, así que no se aplica. Se resolverá al actualizar Firebase.
+- Las cabeceras de seguridad de Hosting (nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy y caché) están configuradas en `firebase.json`, pero **no se pudieron verificar con el emulador local**; falta comprobarlas tras el despliegue.
+- No hay Content-Security-Policy; es una mejora pendiente.
+- Si al registrarse falla la escritura del perfil en Firestore, la cuenta ya existe en Authentication.
+- Se carga Bootstrap completo; podría reducirse el CSS con una compilación a medida.
+- La revisión de accesibilidad con Lighthouse y de responsive se hace manualmente; aún no hay informe registrado.
+
+## Despliegue
+
+Con Firebase Hosting (plan Spark, sin facturación):
+
+```
+npm run build
+firebase deploy --only hosting
+```
+
+Las reglas e índices se despliegan aparte con `firebase deploy --only firestore`.
