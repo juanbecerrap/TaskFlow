@@ -1,23 +1,31 @@
+import { Suspense, type ReactNode } from 'react'
 import { Navigate, type RouteObject } from 'react-router'
+import { IndicadorCarga } from '../components/common/IndicadorCarga'
+import { PaginaNoEncontrada } from '../components/common/PaginaNoEncontrada'
 import { AppShell } from '../components/layout/AppShell'
 import { AuthLayout } from '../components/layout/AuthLayout'
-import { PaginaNoEncontrada } from '../components/common/PaginaNoEncontrada'
-import { PaginaIniciarSesion } from '../pages/auth/PaginaIniciarSesion'
-import { PaginaRecuperarContrasena } from '../pages/auth/PaginaRecuperarContrasena'
-import { PaginaRegistro } from '../pages/auth/PaginaRegistro'
-import { PaginaDetalleProyecto } from '../pages/PaginaDetalleProyecto'
-import { PaginaEditarProyecto } from '../pages/PaginaEditarProyecto'
-import { PaginaEditarTarea } from '../pages/PaginaEditarTarea'
-import { PaginaNuevaTarea } from '../pages/PaginaNuevaTarea'
-import { PaginaNuevoProyecto } from '../pages/PaginaNuevoProyecto'
-import { PaginaPanel } from '../pages/PaginaPanel'
-import { PaginaPerfil } from '../pages/PaginaPerfil'
-import { PaginaProyectos } from '../pages/PaginaProyectos'
-import { PaginaTablero } from '../pages/PaginaTablero'
-import { PaginaTareas } from '../pages/PaginaTareas'
+import {
+  PaginaDetalleProyecto,
+  PaginaEditarProyecto,
+  PaginaEditarTarea,
+  PaginaIniciarSesion,
+  PaginaNuevaTarea,
+  PaginaNuevoProyecto,
+  PaginaPanel,
+  PaginaPerfil,
+  PaginaProyectos,
+  PaginaRecuperarContrasena,
+  PaginaRegistro,
+  PaginaTablero,
+  PaginaTareas,
+} from './paginasDiferidas'
 import { RUTAS } from './rutas'
 import { RutaProtegida } from './RutaProtegida'
 import { RutaSoloPublica } from './RutaSoloPublica'
+
+function conCarga(pagina: ReactNode) {
+  return <Suspense fallback={<IndicadorCarga texto="Cargando…" />}>{pagina}</Suspense>
+}
 
 export const rutasApp: RouteObject[] = [
   {
@@ -30,11 +38,11 @@ export const rutasApp: RouteObject[] = [
       {
         element: <AuthLayout />,
         children: [
-          { path: RUTAS.iniciarSesion, element: <PaginaIniciarSesion /> },
-          { path: RUTAS.registro, element: <PaginaRegistro /> },
+          { path: RUTAS.iniciarSesion, element: conCarga(<PaginaIniciarSesion />) },
+          { path: RUTAS.registro, element: conCarga(<PaginaRegistro />) },
           {
             path: RUTAS.recuperarContrasena,
-            element: <PaginaRecuperarContrasena />,
+            element: conCarga(<PaginaRecuperarContrasena />),
           },
         ],
       },
@@ -46,16 +54,16 @@ export const rutasApp: RouteObject[] = [
       {
         element: <AppShell />,
         children: [
-          { path: RUTAS.panel, element: <PaginaPanel /> },
-          { path: RUTAS.proyectos, element: <PaginaProyectos /> },
-          { path: RUTAS.nuevoProyecto, element: <PaginaNuevoProyecto /> },
-          { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
-          { path: RUTAS.editarProyectoPatron, element: <PaginaEditarProyecto /> },
-          { path: RUTAS.nuevaTareaPatron, element: <PaginaNuevaTarea /> },
-          { path: RUTAS.tareas, element: <PaginaTareas /> },
-          { path: RUTAS.editarTareaPatron, element: <PaginaEditarTarea /> },
-          { path: RUTAS.tablero, element: <PaginaTablero /> },
-          { path: RUTAS.perfil, element: <PaginaPerfil /> },
+          { path: RUTAS.panel, element: conCarga(<PaginaPanel />) },
+          { path: RUTAS.proyectos, element: conCarga(<PaginaProyectos />) },
+          { path: RUTAS.nuevoProyecto, element: conCarga(<PaginaNuevoProyecto />) },
+          { path: RUTAS.proyectoPatron, element: conCarga(<PaginaDetalleProyecto />) },
+          { path: RUTAS.editarProyectoPatron, element: conCarga(<PaginaEditarProyecto />) },
+          { path: RUTAS.nuevaTareaPatron, element: conCarga(<PaginaNuevaTarea />) },
+          { path: RUTAS.tareas, element: conCarga(<PaginaTareas />) },
+          { path: RUTAS.editarTareaPatron, element: conCarga(<PaginaEditarTarea />) },
+          { path: RUTAS.tablero, element: conCarga(<PaginaTablero />) },
+          { path: RUTAS.perfil, element: conCarga(<PaginaPerfil />) },
         ],
       },
     ],
