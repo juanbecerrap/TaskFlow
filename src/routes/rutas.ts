@@ -10,7 +10,11 @@ export const RUTAS = {
   proyecto: (id: string) => `/proyectos/${id}`,
   editarProyectoPatron: '/proyectos/:id/editar',
   editarProyecto: (id: string) => `/proyectos/${id}/editar`,
+  nuevaTareaPatron: '/proyectos/:id/tareas/nueva',
+  nuevaTarea: (id: string) => `/proyectos/${id}/tareas/nueva`,
   tareas: '/tareas',
+  editarTareaPatron: '/tareas/:id/editar',
+  editarTarea: (id: string) => `/tareas/${id}/editar`,
   tablero: '/tablero',
   perfil: '/perfil',
 } as const

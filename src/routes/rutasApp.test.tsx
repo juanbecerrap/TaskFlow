@@ -25,6 +25,15 @@ vi.mock('../features/proyectos/servicioProyectos', () => ({
   eliminarProyecto: vi.fn(),
   aProyecto: vi.fn(),
 }))
+vi.mock('../features/tareas/servicioTareas', () => ({
+  suscribirTareas: vi.fn(() => vi.fn()),
+  suscribirTareasDeProyecto: vi.fn(() => vi.fn()),
+  crearTarea: vi.fn(),
+  actualizarTarea: vi.fn(),
+  cambiarEstadoTarea: vi.fn(),
+  eliminarTarea: vi.fn(),
+  aTarea: vi.fn(),
+}))
 
 const USUARIO = {
   uid: 'u1',

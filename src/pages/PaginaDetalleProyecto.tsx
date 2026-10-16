@@ -1,6 +1,15 @@
 import { useState } from 'react'
-import { Archive, ArchiveRestore, ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+import {
+  Archive,
+  ArchiveRestore,
+  ArrowLeft,
+  ListChecks,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
+import { EstadoVacio } from '../components/common/EstadoVacio'
 import { IndicadorCarga } from '../components/common/IndicadorCarga'
 import { MensajeError } from '../components/common/MensajeError'
 import { ModalConfirmacion } from '../components/common/ModalConfirmacion'
@@ -13,6 +22,8 @@ import {
   eliminarProyecto,
 } from '../features/proyectos/servicioProyectos'
 import { useProyecto } from '../features/proyectos/useProyecto'
+import { ListaTareas } from '../features/tareas/ListaTareas'
+import { useTareas } from '../features/tareas/useTareas'
 import { useTituloDocumento } from '../hooks/useTituloDocumento'
 import { db } from '../lib/firebase'
 import { formatearFecha } from '../lib/formato'
@@ -27,6 +38,11 @@ export function PaginaDetalleProyecto() {
   const { usuario } = useAuth()
   const navegar = useNavigate()
   const { proyecto, cargando, error, noEncontrado } = useProyecto(id)
+  const {
+    tareas,
+    cargando: cargandoTareas,
+    error: errorTareas,
+  } = useTareas(id)
   const [confirmando, setConfirmando] = useState(false)
   const [eliminando, setEliminando] = useState(false)
   const [cambiandoEstado, setCambiandoEstado] = useState(false)
@@ -105,6 +121,23 @@ export function PaginaDetalleProyecto() {
 
   const archivado = proyecto.estado === 'archivado'
 
+  function contenidoTareas() {
+    if (cargandoTareas) return <IndicadorCarga texto="Cargando tareas…" />
+    if (errorTareas) return <MensajeError mensaje={errorTareas} />
+    if (tareas.length === 0) {
+      return (
+        <div className="tf-card">
+          <EstadoVacio
+            icono={ListChecks}
+            titulo="Este proyecto aún no tiene tareas"
+            descripcion="Añade la primera con el botón «Nueva tarea»."
+          />
+        </div>
+      )
+    }
+    return <ListaTareas tareas={tareas} />
+  }
+
   return (
     <section>
       <p className="mb-3">
@@ -169,6 +202,22 @@ export function PaginaDetalleProyecto() {
           {formatearFecha(proyecto.actualizadoEn.toDate())}
         </p>
       </div>
+
+      <section aria-labelledby="titulo-tareas" className="mt-4">
+        <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <h2 id="titulo-tareas" className="h5 mb-0">
+            Tareas
+          </h2>
+          <Link
+            to={RUTAS.nuevaTarea(proyecto.id)}
+            className="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
+          >
+            <Plus aria-hidden="true" size={16} />
+            Nueva tarea
+          </Link>
+        </div>
+        {contenidoTareas()}
+      </section>
 
       <ModalConfirmacion
         abierto={confirmando}

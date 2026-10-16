@@ -4,18 +4,20 @@ import { FirebaseError } from 'firebase/app'
 import type { User } from 'firebase/auth'
 import { Timestamp } from 'firebase/firestore'
 import { MemoryRouter, Route, Routes } from 'react-router'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ContextoAuth } from '../features/auth/contextoAuth'
-import type { Proyecto } from '../types/modelos'
+import type { Proyecto, Tarea } from '../types/modelos'
 import { PaginaDetalleProyecto } from './PaginaDetalleProyecto'
 
 const hooks = vi.hoisted(() => ({ useProyecto: vi.fn() }))
+const hooksTareas = vi.hoisted(() => ({ useTareas: vi.fn() }))
 const servicio = vi.hoisted(() => ({
   cambiarEstadoProyecto: vi.fn(),
   eliminarProyecto: vi.fn(),
 }))
 
 vi.mock('../features/proyectos/useProyecto', () => hooks)
+vi.mock('../features/tareas/useTareas', () => hooksTareas)
 vi.mock('../features/proyectos/servicioProyectos', () => servicio)
 
 const USUARIO = { uid: 'u1' } as unknown as User
@@ -27,6 +29,19 @@ const PROYECTO: Proyecto = {
   nombre: 'Rediseño web',
   descripcion: 'Sitio corporativo nuevo',
   estado: 'activo',
+  creadoEn: FECHA,
+  actualizadoEn: FECHA,
+}
+
+const TAREA: Tarea = {
+  id: 't1',
+  ownerId: 'u1',
+  projectId: 'p1',
+  titulo: 'Escribir informe',
+  descripcion: '',
+  estado: 'pendiente',
+  prioridad: 'alta',
+  fechaLimite: null,
   creadoEn: FECHA,
   actualizadoEn: FECHA,
 }
@@ -49,6 +64,10 @@ function renderizar() {
 }
 
 describe('PaginaDetalleProyecto', () => {
+  beforeEach(() => {
+    hooksTareas.useTareas.mockReturnValue({ tareas: [], cargando: false, error: '' })
+  })
+
   it('muestra el indicador mientras carga', () => {
     hooks.useProyecto.mockReturnValue({
       proyecto: null,
@@ -95,6 +114,43 @@ describe('PaginaDetalleProyecto', () => {
     expect(screen.getByRole('link', { name: 'Editar' })).toHaveAttribute(
       'href',
       '/proyectos/p1/editar',
+    )
+  })
+
+  it('sin tareas muestra el estado vacío y el enlace para crear una', () => {
+    hooks.useProyecto.mockReturnValue(resultado(PROYECTO))
+    renderizar()
+
+    expect(
+      screen.getByRole('heading', { name: 'Este proyecto aún no tiene tareas' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Nueva tarea' })).toHaveAttribute(
+      'href',
+      '/proyectos/p1/tareas/nueva',
+    )
+  })
+
+  it('lista las tareas del proyecto', () => {
+    hooks.useProyecto.mockReturnValue(resultado(PROYECTO))
+    hooksTareas.useTareas.mockReturnValue({ tareas: [TAREA], cargando: false, error: '' })
+    renderizar()
+
+    expect(hooksTareas.useTareas).toHaveBeenCalledWith('p1')
+    expect(screen.getByText('Escribir informe')).toBeInTheDocument()
+    expect(screen.getByText('Prioridad alta')).toBeInTheDocument()
+  })
+
+  it('muestra el error si no se pueden cargar las tareas', () => {
+    hooks.useProyecto.mockReturnValue(resultado(PROYECTO))
+    hooksTareas.useTareas.mockReturnValue({
+      tareas: [],
+      cargando: false,
+      error: 'No tienes permiso para realizar esta acción.',
+    })
+    renderizar()
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'No tienes permiso para realizar esta acción.',
     )
   })
 

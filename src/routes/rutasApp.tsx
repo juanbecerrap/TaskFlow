@@ -7,6 +7,8 @@ import { PaginaRecuperarContrasena } from '../pages/auth/PaginaRecuperarContrase
 import { PaginaRegistro } from '../pages/auth/PaginaRegistro'
 import { PaginaDetalleProyecto } from '../pages/PaginaDetalleProyecto'
 import { PaginaEditarProyecto } from '../pages/PaginaEditarProyecto'
+import { PaginaEditarTarea } from '../pages/PaginaEditarTarea'
+import { PaginaNuevaTarea } from '../pages/PaginaNuevaTarea'
 import { PaginaNuevoProyecto } from '../pages/PaginaNuevoProyecto'
 import { PaginaPanel } from '../pages/PaginaPanel'
 import { PaginaPerfil } from '../pages/PaginaPerfil'
@@ -49,7 +51,9 @@ export const rutasApp: RouteObject[] = [
           { path: RUTAS.nuevoProyecto, element: <PaginaNuevoProyecto /> },
           { path: RUTAS.proyectoPatron, element: <PaginaDetalleProyecto /> },
           { path: RUTAS.editarProyectoPatron, element: <PaginaEditarProyecto /> },
+          { path: RUTAS.nuevaTareaPatron, element: <PaginaNuevaTarea /> },
           { path: RUTAS.tareas, element: <PaginaTareas /> },
+          { path: RUTAS.editarTareaPatron, element: <PaginaEditarTarea /> },
           { path: RUTAS.tablero, element: <PaginaTablero /> },
           { path: RUTAS.perfil, element: <PaginaPerfil /> },
         ],
