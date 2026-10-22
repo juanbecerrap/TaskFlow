@@ -2,9 +2,9 @@
 
 TaskFlow es una aplicación web para organizar proyectos y tareas desde un solo lugar. Permite establecer prioridades, definir fechas límite, consultar el progreso y gestionar las tareas mediante un tablero Kanban.
 
-**Demostración:** https://taskflow-juan.web.app
+**Demostración:** [Ver TaskFlow](https://taskflow-juan.web.app)
 
-**Repositorio:** https://github.com/juanbecerrap/TaskFlow
+**Repositorio:** [GitHub](https://github.com/juanbecerrap/TaskFlow)
 
 ## Acceso de prueba
 
