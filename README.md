@@ -1,114 +1,140 @@
 # TaskFlow
 
-Aplicación web para gestionar proyectos y tareas, con panel de estadísticas y tablero Kanban. Cada usuario ve únicamente sus propios datos.
+TaskFlow es una aplicación web para organizar proyectos y tareas desde un solo lugar. Permite establecer prioridades, definir fechas límite, consultar el progreso y gestionar las tareas mediante un tablero Kanban.
 
-> Proyecto de portafolio. Demo: **https://taskflow-juan.web.app** · Repositorio: **https://github.com/juanbecerrap/TaskFlow**
+**Demostración:** https://taskflow-juan.web.app
 
-## Capturas
+**Repositorio:** https://github.com/juanbecerrap/TaskFlow
 
-### Panel
-![Panel con estadísticas, progreso y próximas tareas](docs/capturas/panel.png)
+## Acceso de prueba
 
-### Tareas
-![Lista de tareas con filtros por estado y prioridad](docs/capturas/tareas.png)
+Puedes utilizar las siguientes credenciales para probar la aplicación:
 
-### Tablero
-![Tablero Kanban con las tareas por estado](docs/capturas/tablero.png)
+- **Correo:** demo@taskflow.com
+- **Contraseña:** Demo2026.
+
+## Capturas de pantalla
+
+### Panel principal
+
+![Panel principal de TaskFlow](docs/capturas/panel.png)
+
+### Gestión de tareas
+
+![Lista de tareas](docs/capturas/tareas.png)
+
+### Tablero Kanban
+
+![Tablero Kanban](docs/capturas/tablero.png)
 
 ### Vista móvil
-<img src="docs/capturas/movil.png" alt="Panel en pantalla de teléfono" width="320">
+
+<p align="center">
+  <img src="docs/capturas/movil.png" alt="TaskFlow en un dispositivo móvil" width="280" />
+</p>
 
 ## Funcionalidades
 
-- Registro, inicio de sesión y recuperación de contraseña con correo y contraseña.
-- Proyectos: crear, editar, archivar, buscar y eliminar con confirmación.
-- Tareas: título, descripción, estado, prioridad y fecha límite; filtros, búsqueda y orden.
-- Panel con datos reales: proyectos activos, tareas pendientes, completadas y vencidas, progreso general, próximas tareas y proyectos recientes.
-- Tablero Kanban de tres columnas: se puede arrastrar o cambiar el estado con un selector accesible (con anuncio para lectores de pantalla).
-- Carga de páginas bajo demanda y separación de librerías grandes.
+- **Gestión de proyectos:** crear, editar, buscar, archivar y eliminar proyectos.
+- **Gestión de tareas:** añadir descripciones, establecer prioridades, definir fechas límite y actualizar estados.
+- **Tablero Kanban:** organizar las tareas en tres columnas y cambiar su estado arrastrándolas o utilizando el selector disponible.
+- **Panel de estadísticas:** consultar proyectos activos, tareas pendientes, completadas y vencidas, además del progreso general.
+- **Búsqueda y filtros:** localizar tareas según sus características y ordenarlas para facilitar su seguimiento.
+- **Autenticación:** registro de usuarios, inicio de sesión y recuperación de contraseña.
+- **Datos independientes por usuario:** cada persona accede únicamente a sus propios proyectos y tareas.
 
-## Tecnologías
+## Tecnologías utilizadas
 
-React 19 · TypeScript (modo estricto) · Vite · React Router · Bootstrap 5 · React Hook Form + Zod · Firebase (Authentication, Firestore, Hosting) · Vitest + Testing Library.
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Bootstrap 5
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Hosting
+- React Hook Form y Zod
+- Vitest y Testing Library
 
-## Requisitos
+## Instalación y ejecución local
 
-- Node.js 24 o superior y npm.
-- Para las pruebas de reglas: Java 21 y Firebase CLI.
+### Requisitos
 
-## Puesta en marcha
+- Node.js 24 o superior.
+- npm.
+- Un proyecto de Firebase para configurar los servicios de autenticación y base de datos.
 
-```
-npm install
-copy .env.example .env
-```
+### Pasos
 
-Completa en `.env` los valores de tu proyecto de Firebase (consola de Firebase → Configuración del proyecto → Tus apps). **`.env` nunca se sube al repositorio.**
+1. Clona el repositorio:
 
-```
-npm run dev
-```
+   ```bash
+   git clone https://github.com/juanbecerrap/TaskFlow.git
+   ```
 
-## Scripts
+2. Entra en la carpeta del proyecto:
 
-| Comando | Qué hace |
+   ```bash
+   cd TaskFlow
+   ```
+
+3. Instala las dependencias:
+
+   ```bash
+   npm install
+   ```
+
+4. Crea tu archivo de variables de entorno desde la plantilla:
+
+   ```cmd
+   copy .env.example .env
+   ```
+
+5. Configura en `.env` las variables correspondientes a tu proyecto de Firebase. No compartas este archivo ni subas tus credenciales al repositorio.
+
+6. Inicia la aplicación:
+
+   ```bash
+   npm run dev
+   ```
+
+Vite mostrará en la terminal la dirección local para abrir TaskFlow en el navegador.
+
+## Pruebas y comandos disponibles
+
+| Comando | Descripción |
 | --- | --- |
-| `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Comprueba tipos y genera `dist` |
-| `npm run preview` | Sirve el build localmente |
-| `npm run lint` | Revisa el código con ESLint |
-| `npm test` | Pruebas de componentes, hooks y lógica (172) |
-| `npm run test:reglas` | Pruebas de reglas de Firestore en el emulador (49) |
+| `npm run dev` | Inicia el servidor de desarrollo. |
+| `npm run build` | Comprueba los tipos y genera la versión de producción. |
+| `npm run preview` | Permite revisar la versión compilada localmente. |
+| `npm run lint` | Ejecuta las comprobaciones de ESLint. |
+| `npm test` | Ejecuta las pruebas automatizadas. |
+| `npm run test:reglas` | Ejecuta las pruebas de las reglas de seguridad de Firestore. |
 
-## Emuladores de Firebase
-
-Para desarrollar sin tocar datos reales:
-
-```
-firebase emulators:start --only auth,firestore --project taskflow-juan
-```
-
-y en `.env` pon `VITE_USE_FIREBASE_EMULATORS=true` (reinicia `npm run dev` para que lo lea). Vuelve a `false` al terminar. Cierra el emulador con Ctrl+C antes de `npm run test:reglas`, porque ambos usan el puerto 8080.
-
-## Estructura
-
-```
-src/
-  components/   Componentes reutilizables y de layout
-  features/     Lógica por dominio: auth, proyectos, tareas, panel
-  hooks/        Hooks compartidos
-  lib/          Firebase, formato de fechas y texto
-  pages/        Páginas de la aplicación
-  routes/       Rutas, protección y carga diferida
-  types/        Modelos de datos
-tests/reglas/   Pruebas de reglas de seguridad de Firestore
-firestore.rules, firestore.indexes.json, firebase.json
-```
+Para ejecutar las pruebas de las reglas de Firestore también se necesitan Java 21 y Firebase CLI.
 
 ## Seguridad
 
-- Las reglas de Firestore exigen sesión, limitan cada documento a su dueño (`ownerId`, inmutable), validan campos, tipos y longitudes, y fijan las marcas de tiempo en el servidor. Una tarea solo se crea dentro de un proyecto propio. Todo lo demás está denegado.
-- Las 49 pruebas de reglas se ejecutan contra el emulador.
-- No hay claves ni credenciales en el código ni en el historial de Git.
-
-## Limitaciones conocidas
-
-- **`npm audit` informa 5 vulnerabilidades altas, todas de una sola cadena** (`@grpc/grpc-js` 1.9.16, traído por `firebase`). Afectan al código de *servidor* gRPC; la app web no lo usa y no está en el paquete del navegador (comprobado buscando `@grpc` en `dist`). Solo se ejecuta en Node durante las pruebas de reglas. La corrección automática propone `firebase@9.14.0`, que rompe la aplicación, así que no se aplica. Se resolverá al actualizar Firebase.
-- Las cabeceras de seguridad de Hosting (nosniff, X-Frame-Options, Referrer-Policy y Permissions-Policy) y la política de caché (sin caché para las páginas, un año para los archivos con hash de `assets/`) están verificadas en la URL publicada.
-- No hay Content-Security-Policy; es una mejora pendiente.
-- Si al registrarse falla la escritura del perfil en Firestore, la cuenta ya existe en Authentication.
-- Se carga Bootstrap completo; podría reducirse el CSS con una compilación a medida.
-- La revisión de accesibilidad con Lighthouse y de responsive se hace manualmente; aún no hay informe registrado.
+TaskFlow utiliza Firebase Authentication para gestionar las cuentas y Cloud Firestore para almacenar los datos. Las reglas de seguridad restringen el acceso a los documentos de cada usuario y validan las operaciones permitidas.
 
 ## Despliegue
 
-Publicado en Firebase Hosting (plan Spark, sin facturación): https://taskflow-juan.web.app
+La aplicación está publicada en Firebase Hosting:
 
-Para volver a publicar:
+**Demostración:** https://taskflow-juan.web.app
 
-```
+Para generar una nueva versión y publicarla, después de configurar Firebase CLI:
+
+```bash
 npm run build
 firebase deploy --only hosting
 ```
 
-Las reglas e índices se despliegan aparte con `firebase deploy --only firestore`.
+Las reglas e índices de Firestore se despliegan por separado cuando sea necesario.
+
+## Autor
+
+**Juan Angel Becerra Padilla**
+
+- [GitHub](https://github.com/juanbecerrap)
+- [LinkedIn](https://www.linkedin.com/in/juanbecerrap/)
